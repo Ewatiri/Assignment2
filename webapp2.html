@@ -5,6 +5,7 @@
     charts = {};
 	maps = new Object();
 	reports = new Object();
+	var d = 0;
 	  
     $(document).ready(function (){
 	  $("#search").keyup(function(){
@@ -23,6 +24,7 @@
 				  var id = datum.id;
 				   (getChartData(datum.id));
 			///	   	console.dir(charts);			  			  
+			
 				});
 			  });
 			  			  
@@ -30,7 +32,16 @@
 		  });
 		});
 	  });
+	  
 	});
+   $(document).ajaxStop(function(){
+    d = 0;
+	for (key in charts){
+	 d +=(charts[key]);
+	 
+	}
+	console.log("Indicator grp usage:",+d);
+   });
 	
 	
 	function getChartData(indId)
@@ -50,15 +61,13 @@
 			  });
 			});
 			
-		  })//.done(function(){console.dir(charts);});
+		  });
 		});
-	  }).done(function(){callAll();});
+	  });
+	  
 	}
-	function callAll(){
-	  $(document).ajaxStop(function(){
-	  console.dir(charts);
-	});
-	}
+	
+	
 	
 	  
 	
