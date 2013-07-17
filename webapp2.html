@@ -1,0 +1,75 @@
+<html>
+  <style type = "text/css">
+  </style>
+  <script type = "text/javascript">
+    charts = {};
+	maps = new Object();
+	reports = new Object();
+	  
+    $(document).ready(function (){
+	  $("#search").keyup(function(){
+	    $("indGrp").html("");
+		$("inds").html("");
+	    $.get('../api/indicatorGroups/query/'+$(this).val()+'.json',function(json){
+		  $(json.indicatorGroups).each(function(i,data){
+		    var indGrp = $("<a></a>").attr("href",data.href).append(data.name);
+			$("#indGrp").append(indGrp).append("</br>");
+			indGrp.bind('click',function(evt){
+			  evt.preventDefault();
+			  $.get($(this).attr("href")+".json",function(json2){
+			    $(json2.indicators).each(function (i, datum){
+				  var indics = $("<a></a>").attr("href","#").append(datum.name);
+				  $("#inds").append(indics).append("</br>");
+				  var id = datum.id;
+				   (getChartData(datum.id));
+			///	   	console.dir(charts);			  			  
+				});
+			  });
+			  			  
+			});
+		  });
+		});
+	  });
+	});
+	
+	
+	function getChartData(indId)
+	{
+	  var hit = 0, miss = 0;
+	  charts[indId] = 0;
+	  $.get('../api/charts.json',function(charty){
+	    $(charty.charts).each(function (index, data){
+		  $.get(data.href+'.json',function (specChart){
+		    $(specChart).each(function(i,d){
+			  $(d.indicators).each(function (i2,d2){
+			    if (indId == d2.id)
+				{
+				  charts[indId] = ++hit;
+				}
+				  
+			  });
+			});
+			
+		  }).done(function(){console.dir(charts);});
+		});
+	  });
+	}
+	
+	$("#result").ajaxStop(function(){
+	  console.dir(charts);
+	});
+	  
+	
+  </script>
+  <div>
+    <label for = "search">Search Indicators</label>
+    <input type = "text" id = "search" />
+    <div id = "indGrp">
+	</div>
+	<div id = "inds">
+	 
+	</div>
+	<div id = "results">
+	</div>
+  </div>
+</html>
