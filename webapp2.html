@@ -1,12 +1,20 @@
 <html>
   <style type = "text/css">
+    #inds{
+	margin-left: 400px;
+	margin-top: -100px;
+	}
   </style>
   <script type = "text/javascript">
     charts = {};
 	maps = new Object();
 	reports = new Object();
-	var d = 0;
-	  
+	var d = 0,cTotal = 0,mTotal= 0,rTotal = 0;
+	 
+	 function getTotals(){
+	   $.get('../api/reportTables.json',function(i, data){
+	   });
+	 }
     $(document).ready(function (){
 	  $("#search").keyup(function(){
 	    $("indGrp").html("");
@@ -18,12 +26,18 @@
 			indGrp.bind('click',function(evt){
 			  evt.preventDefault();
 			  $.get($(this).attr("href")+".json",function(json2){
+			    //console.log($(this));
 			    $(json2.indicators).each(function (i, datum){
 				  var indics = $("<a></a>").attr("href","#").append(datum.name);
 				  $("#inds").append(indics).append("</br>");
 				  var id = datum.id;
 				   (getChartData(datum.id));
-			///	   	console.dir(charts);			  			  
+			///	   	console.dir(charts);
+					indics.bind("click", function(evt2){
+					  evt2.preventDefault();
+					  getIndiv(datum.id);
+					  
+					});
 			
 				});
 			  });
@@ -40,7 +54,8 @@
 	 d +=(charts[key]);
 	 
 	}
-	console.log("Indicator grp usage:",+d);
+	console.log("Indicator grp usage:",+d/cTotal);
+	//console.log("The total:"+total);
    });
 	
 	
@@ -58,14 +73,82 @@
 				{
 				  charts[indId] = ++hit;
 				}
-				  
 			  });
+			  total = index;
+			  //console.log(charty);
 			});
 			
 		  });
 		});
+		cTotal = charty.pager.total;
 	  });
 	  
+	}
+	
+    function getMapData(indId)
+	{
+	 maps = {};
+	  var hit = 0, miss = 0;
+	  charts[indId] = 0;
+	  $.get('../api/mapViews.json',function(mappy){
+	    $(mappy.mapViews).each(function (index, data){
+		  $.get(data.href+'.json',function (specMap){
+		    $(specMap).each(function(i,d){
+			  $(d.indicators).each(function (i2,d2){
+			    if (indId == d2.id)
+				{
+				  maps[indId] = ++hit;
+				}
+			  });
+		
+			  //console.log(charty);
+			});
+			
+		  });
+		});
+		
+	  });
+	  
+	}
+	
+	function getReportData(indId)
+	{
+	 reports = {};
+	  var hit = 0, miss = 0;
+	  reports[indId] = 0;
+	  $.get('../api/reportTables.json',function(reppy){
+	    $(reppy.reportTables).each(function (index, data){
+		  $.get(data.href+'.json',function (specRep){
+		    $(specRep).each(function(i,d){
+			  $(d.indicators).each(function (i2,d2){
+			    if (indId == d2.id)
+				{
+				  reports[indId] = ++hit;
+				}
+			  });
+		
+			  //console.log(charty);
+			});
+			
+		  });
+		});
+		
+	  });
+	  
+	}
+	
+	function getIndiv(indId){
+	$("#results").html("");
+	$(document).ajaxStop(function(){
+	    var indCharts = charts[indId]/cTotal * 100;
+		var a1 = $("<p></p>").append(indCharts);
+		$("#results").append(a1);
+	  //var indMaps = maps[indId]/mTotal*100;
+	  //var indRep = reports[indId]/rTotal * 100;
+	   //console.log(indMaps);
+	  //console.log(indReports);
+	});
+	
 	}
 	
 	
