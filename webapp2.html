@@ -50,14 +50,16 @@
 			  });
 			});
 			
-		  }).done(function(){console.dir(charts);});
+		  })//.done(function(){console.dir(charts);});
 		});
-	  });
+	  }).done(function(){callAll();});
 	}
-	
-	$("#result").ajaxStop(function(){
+	function callAll(){
+	  $(document).ajaxStop(function(){
 	  console.dir(charts);
 	});
+	}
+	
 	  
 	
   </script>
