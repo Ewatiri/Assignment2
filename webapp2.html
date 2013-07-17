@@ -46,6 +46,7 @@
 	
 	function getChartData(indId)
 	{
+	 charts = {};
 	  var hit = 0, miss = 0;
 	  charts[indId] = 0;
 	  $.get('../api/charts.json',function(charty){
