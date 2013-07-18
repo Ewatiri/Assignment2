@@ -19,8 +19,8 @@
 	    $(getChartData).ajaxStop(function(){
 		  analyze();   
 		   display();
-		     
-		    console.log(rem);
+		   console.log(rem);
+		   
 		});
 		
 	
@@ -38,26 +38,34 @@
 	  rem = [];
 	  //$(document).ajaxStop(function (){
 	    $(all).each( function(ind,dat){
-		  if (!(globe.hasOwnProperty(dat))){
+		 if (globe[dat] === undefined){
 		    rem.push(dat);
-			console.log("Yay!");
-			//console.log(rem);
+			
 		 }
 		});
 	  //});
 	}
 	function display(){
 	  $(rem).each(function(ind,dat){
-	    $("#usInds").append(dat);
-	  });
+	     $.get('../api/indicators.json',function(data1){
+		    $(data1.indicators).each(function(i,d){
+				if (d.id == dat)
+				{
+				  $("#usInds").append(d.name).append("<br/>");
+				}
+			});
+		 });
+	    
+		
+	 });
 	}
 	function getChartData(){
 	 $.get('../api/charts.json',function (data3){
 	    $(data3.charts).each(function(i,d1){
 		  $.get(d1.href+'.json',function(d2){
-		    $(d2.indicators).each(function (ind,d3){
+		    $(d2.indicators).each(function (ind,d4){
 			   $(all).each(function(i1,d3){
-			     if (d3 = d2.id)
+			     if (d3 == d4.id)
 				 {
 					globe[d3] = d1.href+'/data';
 				 }
