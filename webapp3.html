@@ -21,6 +21,7 @@
 	  $(getChartData).ajaxStop(function(){
 		//  analyze();   
 		  display();
+		  console.dir(globe);
   	  });
 	 
 	  });
@@ -70,12 +71,14 @@
 	    $("#unused").append(names[rem[i]]).append("<br/>");
 	 }
 	 for (key in globe){
-	   var k = $("<a></a>").attr("href","#").append(names[key]);
+	   var k = $("<a></a>").attr("href",globe[key]).append(names[key]);
 	   $("#used").append(k).append("<br/>");
 	   k.bind("click",function(ev){
 	     ev.preventDefault();
+		 console.log($(this).attr("href"));
 		 img = new Image;
-		 img.src = globe[key];
+		 img.src = $(this).attr("href");
+		 
 		 $("#used").append(img);
 	   });
 	 }
