@@ -75,11 +75,24 @@
 	   $("#used").append(k).append("<br/>");
 	   k.bind("click",function(ev){
 	     ev.preventDefault();
-		 console.log($(this).attr("href"));
+		 var st = $(this).attr("href");
+		 if (st.search("data.html") == -1){
 		 img = new Image;
 		 img.src = $(this).attr("href");
-		 
+		 img.width = 200;
+		 img.height =200;
 		 $("#used").append(img);
+		}
+		else
+		{
+		  rframe = document.createElement("IFRAME");
+		  rframe.style.width = 200 +"px";
+		  rframe.style.height = 200 +"px";
+		 rframe.setAttribute("src",st);
+		 $("#used").append(rframe);
+		}
+		 var h = "haha";
+		 
 	   });
 	 }
 	}
@@ -133,7 +146,7 @@
 		    $(d2.indicators).each(function (i,d3){
 			  $(rem).each(function (i,d4){
 			    if (d4 == d3.id){
-				  globe[d4] = d1.href+'/data';
+				  globe[d4] = d1.href+'/data.html';
 				}
 			  });
 			});
