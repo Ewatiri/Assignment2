@@ -15,6 +15,7 @@
 	   $.get('../api/reportTables.json',function(i, data){
 	   });
 	 }
+	 var i;
     $(document).ready(function (){
 	  $("#search").keyup(function(){
 	    $("indGrp").html("");
@@ -27,7 +28,7 @@
 			  evt.preventDefault();
 			  $.get($(this).attr("href")+".json",function(json2){
 			    //console.log($(this));
-			    $(json2.indicators).each(function (i, datum){
+			    var com = $(json2.indicators).each(function (i, datum){
 				  var indics = $("<a></a>").attr("href","#").append(datum.name);
 				  $("#inds").append(indics).append("</br>");
 				  var id = datum.id;
@@ -35,8 +36,8 @@
 			///	   	console.dir(charts);
 					indics.bind("click", function(evt2){
 					  evt2.preventDefault();
-					  getIndiv(datum.id);
-					  
+					    getIndiv(datum.id);
+						  
 					});
 			
 				});
@@ -46,17 +47,23 @@
 		  });
 		});
 	  });
-	  
-	});
-   $(document).ajaxStop(function(){
+	  $(document).ajaxStop(function(){
     d = 0;
 	for (key in charts){
 	 d +=(charts[key]);
 	 
 	}
-	console.log("Indicator grp usage:",+d/cTotal);
-	//console.log("The total:"+total);
+	chartGrp = d/cTotal;
+      console.dir(charts);	
    });
+	  
+	});
+// calculate the indicator group's usage	
+ 
+    
+ 
+ 
+   
 	
 	
 	function getChartData(indId)
@@ -73,6 +80,7 @@
 				{
 				  charts[indId] = ++hit;
 				}
+				
 			  });
 			  total = index;
 			  //console.log(charty);
@@ -137,17 +145,26 @@
 	  
 	}
 	
+	// calculate the indicator's usage
 	function getIndiv(indId){
-	$("#results").html("");
-	$(document).ajaxStop(function(){
-	    var indCharts = charts[indId]/cTotal * 100;
+	//$("#results").html("");
+	//$(document).ajaxStop(function(){
+	   var x;
+	    if (charts[indId] == undefined){
+		  x = 0;
+		}
+		else
+		  x = charts[indId];
+	    var indCharts = x/cTotal * 100;
 		var a1 = $("<p></p>").append(indCharts);
 		$("#results").append(a1);
+		console.log(charts[indId]);
+		//console.log(charts[indId]);
 	  //var indMaps = maps[indId]/mTotal*100;
 	  //var indRep = reports[indId]/rTotal * 100;
 	   //console.log(indMaps);
 	  //console.log(indReports);
-	});
+	//});
 	
 	}
 	
