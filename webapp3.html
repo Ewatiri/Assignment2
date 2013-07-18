@@ -18,15 +18,15 @@
 		 });
 		 
 	  }).done(function(){
-	    $(getRepData).ajaxStop(function(){
-		  analyze();   
-		   display();
-		   console.log(rem);
-		   
-		});
-		
-	
+	  $(getChartData).ajaxStop(function(){
+		//  analyze();   
+		  display();
+  	  });
+	 
 	  });
+
+		      
+		//});
 /*
 	  
 	*/
@@ -73,7 +73,7 @@
 	function getChartData(){
 	 $.get('../api/charts.json',function (data3){
 	    $(data3.charts).each(function(i,d1){
-		  $.get(d1.href+'.json',function(d2){
+		  y =$.get(d1.href+'.json',function(d2){
 		    $(d2.indicators).each(function (ind,d4){
 			   $(all).each(function(i1,d3){
 			     if (d3 == d4.id)
@@ -84,6 +84,8 @@
 			});
 		  });
 		});
+	 }).done(function(){
+	   y.done(function(){console.dir(globe)});
 	 });
 	}
 	
@@ -92,7 +94,7 @@
 	   $(data5.mapViews).each(function (i1,d6){
 	      $.get(d6.href+'.json',function(d7){
 		    $(d7.indicator).each(function (ind,d8){
-			  $(all).each(function (i1,d9){
+			  $(rem).each(function (i1,d9){
 			    if (d9 == d8.id){
 				  globe[d9] = d6.href+'/data';
 				}
