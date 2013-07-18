@@ -2,10 +2,56 @@
   <style type = "text/css">
   </style>
   <script type = "text/javascript">
+    // Objects
+	globe = {};
+	rem = [];
+	all = [];
+	
     $("#indicators").click(function(){
-	  
+	  console.log("Hello");
+	  $.get('../api/indicators.json',function(data1){
+	     $(data.indicators).each(function (index1,data2){
+		    all.push(data2.id);
+		 });
+	  });
+	  $(document).ajaxStop(function(){
+	    getChartData();
+		analyze();
+		display();
+	  });
 	});
+	
+	function analyze(){
+	  rem = [];
+	  $(document).ajaxStop(function (){
+	    $(all).each( function(ind,dat){
+		  if (globe[dat] == undefined)
+		  {
+		    rem.push(dat);
+		  }
+		});
+	  });
+	}
+	function display(){
+	  $(rem).each(function(ind,dat){
+	    $("#usInds").append(dat);
+	  });
+	}
 	function getChartData(){
+	 $.get('../api/charts.json',function (data3){
+	    $(data3.charts).each(function(i,d1){
+		  $.get(d1.href+'.json',function(d2){
+		    $(d2.indicators).each(function (ind,d3){
+			   $(all).each(function(i1,d3){
+			     if (d3 = d2.id)
+				 {
+					globe[d3] = d1.href+'/data';
+				 }
+			   });
+			});
+		  });
+		});
+	 });
 	}
 	function getMapData(){
 	}
@@ -15,5 +61,8 @@
   <div>
     <a href= "#" id = "indicators">Indicators</a>
 	<a href = "#" id = "DataEl">Data Elements</a>
+	<div id = "usInds">
+	  
+	</div>
   </div>
 </html>
