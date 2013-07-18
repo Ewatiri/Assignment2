@@ -41,13 +41,7 @@
 					});
 			
 				});
-			  });
-			  			  
-			});
-		  });
-		});
-	  });
-	  $(document).ajaxStop(function(){
+				 $(document).ajaxStop(function(){
     d = 0;
 	for (key in charts){
 	 d +=(charts[key]);
@@ -56,6 +50,13 @@
 	chartGrp = d/cTotal;
       console.dir(charts);	
    });
+			  });
+			  			  
+			});
+		  });
+		});
+	  });
+	  
 	  
 	});
 // calculate the indicator group's usage	
