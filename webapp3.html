@@ -7,30 +7,44 @@
 	rem = [];
 	all = [];
 	
-    $("#indicators").click(function(){
+   $(document).ready(function(){
+     $("#indicators").click(function(){
 	  console.log("Hello");
-	  $.get('../api/indicators.json',function(data1){
-	     $(data.indicators).each(function (index1,data2){
+	  datf = $.get('../api/indicators.json',function(data1){
+	     $(data1.indicators).each(function (index1,data2){
 		    all.push(data2.id);
 		 });
+		 
+	  }).done(function(){
+	    $(getChartData).ajaxStop(function(){
+		  analyze();   
+		   display();
+		     
+		    console.log(rem);
+		});
+		
+	
 	  });
-	  $(document).ajaxStop(function(){
-	    getChartData();
-		analyze();
-		display();
-	  });
+/*
+	  
+	*/
 	});
+    
+   });
+   
+    /**/
 	
 	function analyze(){
 	  rem = [];
-	  $(document).ajaxStop(function (){
+	  //$(document).ajaxStop(function (){
 	    $(all).each( function(ind,dat){
-		  if (globe[dat] == undefined)
-		  {
+		  if (!(globe.hasOwnProperty(dat))){
 		    rem.push(dat);
-		  }
+			console.log("Yay!");
+			//console.log(rem);
+		 }
 		});
-	  });
+	  //});
 	}
 	function display(){
 	  $(rem).each(function(ind,dat){
