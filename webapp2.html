@@ -1,7 +1,12 @@
 <html>
   <style type = "text/css">
     #inds{
-	margin-left: 400px;
+	margin-left: 200px;
+	margin-top: -100px;
+	width: 300px;
+	}
+	#results2{
+	margin-left:550px;
 	margin-top: -100px;
 	}
   </style>
@@ -19,7 +24,8 @@
     $(document).ready(function (){
 	  $("#search").keyup(function(){
 	    $("#indGrp").html("");
-		$("#results").html("");
+		$("#results1").html("");
+		$("#results2").html("");
 		$("#inds").html("");
 	    $.get('../api/indicatorGroups/query/'+$(this).val()+'.json',function(json){
 		  $(json.indicatorGroups).each(function(i,data){
@@ -27,7 +33,7 @@
 			$("#indGrp").append(indGrp).append("</br>");
 			indGrp.bind('click',function(evt){
 			  evt.preventDefault();
-			  $("#results").html("");
+			  $("#results1").html("");
 			  $("#inds").html("");
 			  $.get($(this).attr("href")+".json",function(json2){
 			    //console.log($(this));
@@ -35,23 +41,38 @@
 				  var indics = $("<a></a>").attr("href","#").append(datum.name);
 				  $("#inds").append(indics).append("</br>");
 				  var id = datum.id;
-				   (getChartData(datum.id));
+				   getChartData(datum.id);
+				   getMapData(datum.id);
+				   getReportData(datum.id);
 			///	   	console.dir(charts);
 					indics.bind("click", function(evt2){
 					  evt2.preventDefault();
-					    $("#results").html("");
+					   
+					    $("#results2").html("");
 					    getIndiv(datum.id);
+					  
+					    
 						  
 					});
 			
 				});
 				 $(document).ajaxStop(function(){
-                   d = 0;
+                   d1 = 0,d2 = 0, d3 = 0;
 				   for (key in charts){
-	                 d +=(charts[key]);
+	                 d1 +=(charts[key]);
 	 
 	               }
-	               chartGrp = d/cTotal;
+				   for (key in maps){
+				     d2 += (maps[key]);
+				   }
+				   for (key in reports){
+				     d3 += (reports[key]);
+				   }
+	               chartGrp = d1/cTotal;
+				   mapGrp = d2/mTotal;
+				   repGrp = d3/rTotal;
+				   $("#results1").html("");
+				   $("#grpC").append(chartGrp);
                    console.dir(charts);	
                 });
 			  });
@@ -118,10 +139,12 @@
 			});
 			
 		  });
+		 miss++;
 		});
 		
 	  });
-	  
+	  mTotal = miss;
+	  console.log("Maps"+miss);
 	}
 	
 	function getReportData(indId)
@@ -145,7 +168,7 @@
 			
 		  });
 		});
-		
+		rTotal = reppy.pager.total;
 	  });
 	  
 	}
@@ -162,7 +185,7 @@
 		  x = charts[indId];
 	    var indCharts = x/cTotal * 100;
 		var a1 = $("<p></p>").append(indCharts);
-		$("#results").append(a1);
+		$("#results2").append(a1);
 		console.log(charts[indId]);
 		//console.log(charts[indId]);
 	  //var indMaps = maps[indId]/mTotal*100;
@@ -186,7 +209,11 @@
 	<div id = "inds">
 	 
 	</div>
-	<div id = "results">
+	<div id = "results1">
+	 	 <p id = "grpC">Indicator Group Chart usage:</p>
+	</div>
+	<div id = "results2">
+	 <p>Indicator usage:</p>
 	</div>
   </div>
 </html>
