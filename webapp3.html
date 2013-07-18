@@ -88,13 +88,13 @@
 	}
 	
 	function getMapData(){
-	 $.get('../api/mapViews.json',function(data4){
-	   $(data4.mapViews).each(function (i1,d1){
-	      $.get(d1.href+'json',function(d2){
-		    $(d2.indicator).each(function (ind,d4){
-			  $(all).each(function (i1,d3){
-			    if (d3 == d4.id){
-				  globe[d3] = d1.href+'/data';
+	 $.get('../api/mapViews.json',function(data5){
+	   $(data5.mapViews).each(function (i1,d6){
+	      $.get(d6.href+'.json',function(d7){
+		    $(d7.indicator).each(function (ind,d8){
+			  $(all).each(function (i1,d9){
+			    if (d9 == d8.id){
+				  globe[d9] = d6.href+'/data';
 				}
 			  });
 			});
