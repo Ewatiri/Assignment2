@@ -6,6 +6,7 @@
 	globe = {};
 	rem = [];
 	all = [];
+	names = {};
 	
    $(document).ready(function(){
      $("#indicators").click(function(){
@@ -13,6 +14,7 @@
 	  datf = $.get('../api/indicators.json',function(data1){
 	     $(data1.indicators).each(function (index1,data2){
 		    all.push(data2.id);
+			names[data2.id] = (data2.name);
 		 });
 		 
 	  }).done(function(){
@@ -46,18 +48,27 @@
 	  //});
 	}
 	function display(){
-	  $(rem).each(function(ind,dat){
+	  var len1 = rem.length;
+	  var len2 = names.length;
+	  /*$(rem).each(function(ind,dat){
 	     $.get('../api/indicators.json',function(data1){
 		    $(data1.indicators).each(function(i,d){
-				if (d.id == dat)
+			  for (var i = 0; i < len; i++){
+				if (d.id == rem[i])
 				{
 				  $("#usInds").append(d.name).append("<br/>");
 				}
+				}
 			});
-		 });
+		});
 	    
 		
-	 });
+	 });*/
+	 for (var i =0; i< len1; i++)
+	 {
+	    $("#usInds").append(names[rem[i]]).append("<br/>");
+	 }
+	 
 	}
 	function getChartData(){
 	 $.get('../api/charts.json',function (data3){
@@ -76,6 +87,9 @@
 	 });
 	}
 	function getMapData(){
+	 $.get('../api/mapViews.json',function(data4){
+	   $(data4.mapviews)
+	 });
 	}
 	function getRepData(){
 	}
