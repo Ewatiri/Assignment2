@@ -18,14 +18,17 @@
 	 var i;
     $(document).ready(function (){
 	  $("#search").keyup(function(){
-	    $("indGrp").html("");
-		$("inds").html("");
+	    $("#indGrp").html("");
+		$("#results").html("");
+		$("#inds").html("");
 	    $.get('../api/indicatorGroups/query/'+$(this).val()+'.json',function(json){
 		  $(json.indicatorGroups).each(function(i,data){
 		    var indGrp = $("<a></a>").attr("href",data.href).append(data.name);
 			$("#indGrp").append(indGrp).append("</br>");
 			indGrp.bind('click',function(evt){
 			  evt.preventDefault();
+			  $("#results").html("");
+			  $("#inds").html("");
 			  $.get($(this).attr("href")+".json",function(json2){
 			    //console.log($(this));
 			    var com = $(json2.indicators).each(function (i, datum){
@@ -36,20 +39,21 @@
 			///	   	console.dir(charts);
 					indics.bind("click", function(evt2){
 					  evt2.preventDefault();
+					    $("#results").html("");
 					    getIndiv(datum.id);
 						  
 					});
 			
 				});
 				 $(document).ajaxStop(function(){
-    d = 0;
-	for (key in charts){
-	 d +=(charts[key]);
+                   d = 0;
+				   for (key in charts){
+	                 d +=(charts[key]);
 	 
-	}
-	chartGrp = d/cTotal;
-      console.dir(charts);	
-   });
+	               }
+	               chartGrp = d/cTotal;
+                   console.dir(charts);	
+                });
 			  });
 			  			  
 			});
