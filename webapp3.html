@@ -102,10 +102,11 @@
 	   });
 	 });
 	}
+	
 	function getRepData(){
 	 $.get('../api/reportTables.json',function(data){
 	    $(data.reportTables).each(function(i,d1){
-		  $.get(d1.href+'.json',function(i,d2){
+		  $.get(d1.href+'.json',function(d2){
 		    $(d2.indicators).each(function (i,d3){
 			  $(all).each(function (i,d4){
 			    if (d4 == d3.id){
