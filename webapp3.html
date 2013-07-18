@@ -66,9 +66,19 @@
 	 });*/
 	 for (var i =0; i< len1; i++)
 	 {
-	    $("#usInds").append(names[rem[i]]).append("<br/>");
+	    //var d = ("<a></a>").attr("href","#").append(names[rem[i]]);
+	    $("#unused").append(names[rem[i]]).append("<br/>");
 	 }
-	 
+	 for (key in globe){
+	   var k = $("<a></a>").attr("href","#").append(names[key]);
+	   $("#used").append(k).append("<br/>");
+	   k.bind("click",function(ev){
+	     ev.preventDefault();
+		 img = new Image;
+		 img.src = globe[key];
+		 $("#used").append(img);
+	   });
+	 }
 	}
 	function getChartData(){
 	 $.get('../api/charts.json',function (data3){
@@ -115,8 +125,8 @@
 	
 	function getRepData(){
 	 $.get('../api/reportTables.json',function(data){
-	  e1 =  $(data.reportTables).each(function(i,d1){
-		  $.get(d1.href+'.json',function(d2){
+	   $(data.reportTables).each(function(i,d1){
+		e1 =  $.get(d1.href+'.json',function(d2){
 		    $(d2.indicators).each(function (i,d3){
 			  $(rem).each(function (i,d4){
 			    if (d4 == d3.id){
@@ -136,7 +146,10 @@
   <div>
     <a href= "#" id = "indicators">Indicators</a>
 	<a href = "#" id = "DataEl">Data Elements</a>
-	<div id = "usInds">
+	<div id = "used">
+	  
+	</div>
+	<div id = "unused">
 	  
 	</div>
   </div>
