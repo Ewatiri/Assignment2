@@ -85,14 +85,17 @@
 		  });
 		});
 	 }).done(function(){
-	   y.done(function(){console.dir(globe)});
+	   y.done(function(){
+	    analyze();
+		getMapData();
+	   });
 	 });
 	}
 	
 	function getMapData(){
 	 $.get('../api/mapViews.json',function(data5){
 	   $(data5.mapViews).each(function (i1,d6){
-	      $.get(d6.href+'.json',function(d7){
+	      e = $.get(d6.href+'.json',function(d7){
 		    $(d7.indicator).each(function (ind,d8){
 			  $(rem).each(function (i1,d9){
 			    if (d9 == d8.id){
@@ -102,15 +105,20 @@
 			});
 		  });
 	   });
+	 }).done(function(){
+	  e.done(function(){
+	    analyze();
+		getRepData();
+	  });
 	 });
 	}
 	
 	function getRepData(){
 	 $.get('../api/reportTables.json',function(data){
-	    $(data.reportTables).each(function(i,d1){
+	  e1 =  $(data.reportTables).each(function(i,d1){
 		  $.get(d1.href+'.json',function(d2){
 		    $(d2.indicators).each(function (i,d3){
-			  $(all).each(function (i,d4){
+			  $(rem).each(function (i,d4){
 			    if (d4 == d3.id){
 				  globe[d4] = d1.href+'/data';
 				}
@@ -118,6 +126,10 @@
 			});
 		  });
 		});
+	 }).done(function(){
+	  e1.done(function(){
+	    analyze();
+	  });
 	 });
 	}
   </script>
