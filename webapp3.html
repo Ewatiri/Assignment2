@@ -18,7 +18,7 @@
 		 });
 		 
 	  }).done(function(){
-	    $(getChartData).ajaxStop(function(){
+	    $(getMapData).ajaxStop(function(){
 		  analyze();   
 		   display();
 		   console.log(rem);
@@ -86,9 +86,20 @@
 		});
 	 });
 	}
+	
 	function getMapData(){
 	 $.get('../api/mapViews.json',function(data4){
-	   $(data4.mapviews)
+	   $(data4.mapViews).each(function (i1,d1){
+	      $.get(d1.href+'json',function(d2){
+		    $(d2.indicator).each(function (ind,d4){
+			  $(all).each(function (i1,d3){
+			    if (d3 == d4.id){
+				  globe[d3] = d1.href+'/data';
+				}
+			  });
+			});
+		  });
+	   });
 	 });
 	}
 	function getRepData(){
