@@ -41,9 +41,9 @@
 				  var indics = $("<a></a>").attr("href","#").append(datum.name);
 				  $("#inds").append(indics).append("</br>");
 				  var id = datum.id;
-				   getChartData(datum.id);
+				   //getChartData(datum.id);
 				   getMapData(datum.id);
-				   getReportData(datum.id);
+				   //getReportData(datum.id);
 			///	   	console.dir(charts);
 					indics.bind("click", function(evt2){
 					  evt2.preventDefault();
@@ -72,8 +72,11 @@
 				   mapGrp = d2/mTotal;
 				   repGrp = d3/rTotal;
 				   $("#results1").html("");
-				   $("#grpC").append(chartGrp);
-                   console.dir(charts);	
+				   $("#results1").append(chartGrp);
+                   //console.log(charts);	
+				   //console.log(maps);	
+				   console.log(reports);	
+				   console.log("rep"+repGrp);	
                 });
 			  });
 			  			  
@@ -123,12 +126,12 @@
 	{
 	 maps = {};
 	  var hit = 0, miss = 0;
-	  charts[indId] = 0;
+	  maps[indId] = 0;
 	  $.get('../api/mapViews.json',function(mappy){
 	    $(mappy.mapViews).each(function (index, data){
 		  $.get(data.href+'.json',function (specMap){
 		    $(specMap).each(function(i,d){
-			  $(d.indicators).each(function (i2,d2){
+			  $(d.indicator).each(function (i2,d2){
 			    if (indId == d2.id)
 				{
 				  maps[indId] = ++hit;
@@ -143,8 +146,12 @@
 		});
 		
 	  });
-	  mTotal = miss;
+	  $(document).ajaxStop(function(){
+	    mTotal = miss;
 	  console.log("Maps"+miss);
+	  
+	  });
+	  
 	}
 	
 	function getReportData(indId)
@@ -169,6 +176,7 @@
 		  });
 		});
 		rTotal = reppy.pager.total;
+		console.log("r"+rTotal);
 	  });
 	  
 	}
