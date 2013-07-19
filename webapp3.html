@@ -1,5 +1,20 @@
 <html>
   <style type = "text/css">
+    #used{
+	 width: 400px;
+	 margin-left:0px;
+	}
+	#evidence{
+	 width: 300px;
+	 margin-left: 350px;
+	 margin-top: -600px;
+	}
+	#unused{
+	 width: 300px;
+	 margin-left: 750px;
+	 margin-top:-250px;
+	 }
+	
   </style>
   <script type = "text/javascript">
     // Objects
@@ -10,6 +25,7 @@
 	
    $(document).ready(function(){
      $("#indicators").click(function(){
+	  $("#indicators").attr("disabled",true);
 	  console.log("Hello");
 	  datf = $.get('../api/indicators.json',function(data1){
 	     $(data1.indicators).each(function (index1,data2){
@@ -74,14 +90,15 @@
 	   var k = $("<a></a>").attr("href",globe[key]).append(names[key]);
 	   $("#used").append(k).append("<br/>");
 	   k.bind("click",function(ev){
+	    $("#evidence").html("");
 	     ev.preventDefault();
 		 var st = $(this).attr("href");
 		 if (st.search("data.html") == -1){
 		 img = new Image;
 		 img.src = $(this).attr("href");
-		 img.width = 200;
+		 img.width = 300;
 		 img.height =200;
-		 $("#used").append(img);
+		 $("#evidence").append(img);
 		}
 		else
 		{
@@ -89,9 +106,9 @@
 		  rframe.style.width = 200 +"px";
 		  rframe.style.height = 200 +"px";
 		 rframe.setAttribute("src",st);
-		 $("#used").append(rframe);
+		 $("#evidence").append(rframe);
 		}
-		 var h = "haha";
+		
 		 
 	   });
 	 }
@@ -160,13 +177,18 @@
 	}
   </script>
   <div>
-    <a href= "#" id = "indicators">Indicators</a>
-	<a href = "#" id = "DataEl">Data Elements</a>
+    <button id = "indicators">Indicators</button>
+	
 	<div id = "used">
 	  
 	</div>
+	<div id =  "evidence">
+	</div>
 	<div id = "unused">
 	  
+	</div>
+	
+	<div id = "stats">
 	</div>
   </div>
 </html>
