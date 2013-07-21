@@ -10,7 +10,7 @@
 	 $("#indicators").click(function(){
 	   $("#indicators").attr("disabled","true");
 	      elem = "indicators";
-	      fetch();
+	      fetch1();
 	 
 	 });
 	});
@@ -19,11 +19,41 @@
 	 $("#delems").click(function(){
 	   $("#delems").attr("disabled","true");
 	      elem = "dataElements";
-	      fetch();
+	      fetch1();
 	 
 	 });
 	});
-		
+	
+	function fetch1(){
+	 all =[];
+	 names = [];
+	 globe ={};
+	 var pages;
+	 var i ;
+	 $.get('../api/'+elem+'.json',function(data){
+	    pages = data.pager.pageCount;
+		console.log(pages);
+	    for (i = 1; i <= pages; i++)
+		{
+		 y = $.get('../api/'+elem+'.json?page='+i,function(data2){
+		     $(data2[elem]).each(function (ind,data3){
+		       all.push(data3.id);
+		       names.push(data3.name);
+		   });   
+		  });
+		}
+	    
+	 }).done(function(){
+	     y.done(function(){
+		   getDataSet();
+	    });
+	     
+		 
+	   
+		 });
+	 
+	}
+	
     function fetch(){
 	 all =[];
 	 names = [];
