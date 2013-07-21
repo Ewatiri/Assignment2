@@ -1,0 +1,200 @@
+<html>
+  <style type = "text/css">
+    #used{
+	 width: 400px;
+	 margin-left:0px;
+	 font-size: 12px;
+	 padding-bottom: 2px;
+	}
+	#evidence{
+	 width: 300px;
+	 margin-left: 450px;
+	 margin-top: -600px;
+	}
+	#unused{
+	 width: 300px;
+	 margin-left: 850px;
+	 margin-top:-250px;
+	 font-size: 12px;
+	 padding-bottom: 2px;
+	 }
+	 a{
+	 style:none;
+	 }
+	
+  </style>
+  <script type = "text/javascript">
+    // Objects
+	globe = {};
+	rem = [];
+	all = [];
+	names = {};
+	
+   $(document).ready(function(){
+     $("#indicators").click(function(){
+	  $("#indicators").attr("disabled",true);
+	  console.log("Hello");
+	  datf = $.get('../api/indicators.json',function(data1){
+	     $(data1.indicators).each(function (index1,data2){
+		    all.push(data2.id);
+			names[data2.id] = (data2.name);
+		 });
+		 
+	  }).done(function(){
+	  $(getChartData).ajaxStop(function(){
+		//  analyze();   
+		  display();
+		  console.dir(globe);
+  	  });
+	 
+	  });
+
+		      
+		//});
+/*
+	  
+	*/
+	});
+    
+   });
+   
+    /**/
+	
+	function analyze(){
+	  rem = [];
+	  //$(document).ajaxStop(function (){
+	    $(all).each( function(ind,dat){
+		 if (globe[dat] === undefined){
+		    rem.push(dat);
+			
+		 }
+		});
+	  //});
+	}
+	function display(){
+	  var len1 = rem.length;
+	  var len2 = names.length;
+	  /*$(rem).each(function(ind,dat){
+	     $.get('../api/indicators.json',function(data1){
+		    $(data1.indicators).each(function(i,d){
+			  for (var i = 0; i < len; i++){
+				if (d.id == rem[i])
+				{
+				  $("#usInds").append(d.name).append("<br/>");
+				}
+				}
+			});
+		});
+	    
+		
+	 });*/
+	 for (var i =0; i< len1; i++)
+	 {
+	    //var d = ("<a></a>").attr("href","#").append(names[rem[i]]);
+	    $("#unused").append(names[rem[i]]).append("<br/>");
+	 }
+	 for (key in globe){
+	   var k = $("<a></a>").attr("href",globe[key]).append(names[key]);
+	   $("#used").append(k).append("<br/>");
+	   k.bind("click",function(ev){
+	    $("#evidence").html("");
+	     ev.preventDefault();
+		 var st = $(this).attr("href");
+		 if (st.search("data.html") == -1){
+		 img = new Image;
+		 img.src = $(this).attr("href");
+		 img.width = 300;
+		 img.height =200;
+		 $("#evidence").append(img);
+		}
+		else
+		{
+		  rframe = document.createElement("IFRAME");
+		  rframe.style.width = 200 +"px";
+		  rframe.style.height = 200 +"px";
+		 rframe.setAttribute("src",st);
+		 $("#evidence").append(rframe);
+		}
+		
+		 
+	   });
+	 }
+	}
+	function getChartData(){
+	 $.get('../api/charts.json',function (data3){
+	    $(data3.charts).each(function(i,d1){
+		  y =$.get(d1.href+'.json',function(d2){
+		    $(d2.indicators).each(function (ind,d4){
+			   $(all).each(function(i1,d3){
+			     if (d3 == d4.id)
+				 {
+					globe[d3] = d1.href+'/data';
+				 }
+			   });
+			});
+		  });
+		});
+	 }).done(function(){
+	   y.done(function(){
+	    analyze();
+		getMapData();
+	   });
+	 });
+	}
+	
+	function getMapData(){
+	 $.get('../api/mapViews.json',function(data5){
+	   $(data5.mapViews).each(function (i1,d6){
+	      e = $.get(d6.href+'.json',function(d7){
+		    $(d7.indicator).each(function (ind,d8){
+			  $(rem).each(function (i1,d9){
+			    if (d9 == d8.id){
+				  globe[d9] = d6.href+'/data';
+				}
+			  });
+			});
+		  });
+	   });
+	 }).done(function(){
+	  e.done(function(){
+	    analyze();
+		getRepData();
+	  });
+	 });
+	}
+	
+	function getRepData(){
+	 $.get('../api/reportTables.json',function(data){
+	   $(data.reportTables).each(function(i,d1){
+		e1 =  $.get(d1.href+'.json',function(d2){
+		    $(d2.indicators).each(function (i,d3){
+			  $(rem).each(function (i,d4){
+			    if (d4 == d3.id){
+				  globe[d4] = d1.href+'/data.html';
+				}
+			  });
+			});
+		  });
+		});
+	 }).done(function(){
+	  e1.done(function(){
+	    analyze();
+	  });
+	 });
+	}
+  </script>
+  <div>
+    <button id = "indicators">Indicators</button>
+	<div id = "used">
+	  
+	</div>
+	<div id =  "evidence">
+	</div>
+	<div id = "unused">
+	  
+	</div>
+	
+	<div id = "stats">
+	</div>
+  </div>
+</html>
