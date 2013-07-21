@@ -3,7 +3,8 @@
   </style>
   <script type = "text/javascript">
     all = [];
-	names = [];
+	names = {};
+	rem = []; 
 	var elem = "";
 	globe ={};
     $(document).ready(function(){
@@ -38,7 +39,7 @@
 		 y = $.get('../api/'+elem+'.json?page='+i,function(data2){
 		     $(data2[elem]).each(function (ind,data3){
 		       all.push(data3.id);
-		       names.push(data3.name);
+		       names[data3.id] = data3.name;
 		   });   
 		  });
 		}
@@ -68,7 +69,16 @@
 		 });
 	 
 	}
-	
+	function analyze(){
+	  rem = [];
+	     $(all).each( function(ind,dat){
+		 if (globe[dat] === undefined){
+		    rem.push(dat);
+			
+		 }
+		});
+	  
+	}
 	function getCharts(){
 	console.log(all.length);
 	$.get('../api/charts.json',function(data){
@@ -78,7 +88,7 @@
 		     $(all).each(function(ind2,d4){
 			    if (d4 == d3.id)
 				{
-				  globe[d4] = d1.href;
+				  globe[d4] = d1.href+'/data';
 				}
 			 });
 		   });
@@ -86,14 +96,98 @@
 	   });
 	 }).done(function(){
 	   y.done(function(){
-	     console.dir(globe);
+	     analyze();
+		 getMapData();
 	   });
 	   
 	 });
+	}
+	function getMapData(){
+	 $.get('../api/mapViews.json',function(data5){
+	   $(data5.mapViews).each(function (i1,d6){
+	      e = $.get(d6.href+'.json',function(d7){
+		    $(d7[elem]).each(function (ind,d8){
+			  $(rem).each(function (i1,d9){
+			    if (d9 == d8.id){
+				  globe[d9] = d6.href+'/data';
+				}
+			  });
+			});
+		  });
+	   });
+	 }).done(function(){
+	  e.done(function(){
+	    analyze();
+		getRepData();
+	  });
+	 });
+	}
+	
+	function getRepData(){
+	 $.get('../api/reportTables.json',function(data){
+	   $(data.reportTables).each(function(i,d1){
+		e1 =  $.get(d1.href+'.json',function(d2){
+		    $(d2[elem]).each(function (i,d3){
+			  $(rem).each(function (i,d4){
+			    if (d4 == d3.id){
+				  globe[d4] = d1.href+'/data.html';
+				}
+			  });
+			});
+		  });
+		});
+	 }).done(function(){
+	  e1.done(function(){
+	    analyze();
+		display();
+	  });
+	 });
+	}
+	function display(){
+	  var len1 = rem.length;
+	  var len2 = names.length;
+	 for (var i =0; i< len1; i++)
+	 {
+	    //var d = ("<a></a>").attr("href","#").append(names[rem[i]]);
+	   // $("#unused").append(names[rem[i]]).append("<br/>");
+	   console.log(names[rem[i]]);
+	 }
+	 for (key in globe){
+	   var k = $("<a></a>").attr("href",globe[key]).append(names[key]);
+	   $("#used").append(k).append("<br/>");
+	   k.bind("click",function(ev){
+	    $("#evidence").html("");
+	     ev.preventDefault();
+		 var st = $(this).attr("href");
+		 if (st.search("data.html") == -1){
+		 img = new Image;
+		 img.src = $(this).attr("href");
+		 img.width = 300;
+		 img.height =200;
+		 $("#evidence").append(img);
+		}
+		else
+		{
+		  rframe = document.createElement("IFRAME");
+		  rframe.style.width = 200 +"px";
+		  rframe.style.height = 200 +"px";
+		 rframe.setAttribute("src",st);
+		 $("#evidence").append(rframe);
+		}
+		
+		 
+	   });
+	 }
 	}
   </script>
   <div>
     <button id = "indicators">Indicators</button>
 	<button id = "delems">Data Elements</button>
+	<div id = "used">
+	</div>
+	<div id = "evidence">
+	</div>
+	<div id = "unused">
+	</div>
   </div>
 </html>
