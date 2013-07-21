@@ -45,7 +45,7 @@
 	    
 	 }).done(function(){
 	     y.done(function(){
-		   getDataSet();
+		   getCharts();
 	    });
 	     
 		 
@@ -64,15 +64,15 @@
 		  names.push(data2.name);
 		});
 	 }).done(function(){
-	     getDataSet();
+	     getCharts();
 		 });
 	 
 	}
 	
-	function getDataSet(){
+	function getCharts(){
 	console.log(all.length);
-	$.get('../api/dataSets.json',function(data){
-	   $(data.dataSets).each(function(ind, d1){
+	$.get('../api/charts.json',function(data){
+	   $(data.charts).each(function(ind, d1){
 	     y = $.get(d1.href+'.json',function(d2){
 		   $(d2[elem]).each(function (ind1,d3){
 		     $(all).each(function(ind2,d4){
