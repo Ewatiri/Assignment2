@@ -1,5 +1,26 @@
 <html>
   <style type = "text/css">
+	#used{
+	 width: 400px;
+	 margin-left:0px;
+	 font-size: 12px;
+	 padding-bottom: 2px;
+	}
+	#evidence{
+	 width: 300px;
+	 margin-left: 450px;
+	 margin-top: -600px;
+	}
+	#unused{
+	 width: 300px;
+	 margin-left: 850px;
+	 margin-top:-250px;
+	 font-size: 12px;
+	 padding-bottom: 2px;
+	 }
+	 a{
+	 style:none;
+	 }
   </style>
   <script type = "text/javascript">
     all = [];
@@ -149,12 +170,13 @@
 	 for (var i =0; i< len1; i++)
 	 {
 	    //var d = ("<a></a>").attr("href","#").append(names[rem[i]]);
-	   // $("#unused").append(names[rem[i]]).append("<br/>");
-	   console.log(names[rem[i]]);
+	   $("#unused").append(names[rem[i]]).append("<br/>");
+	   console.log(rem[i]);
 	 }
 	 for (key in globe){
 	   var k = $("<a></a>").attr("href",globe[key]).append(names[key]);
 	   $("#used").append(k).append("<br/>");
+	    console.log(key);
 	   k.bind("click",function(ev){
 	    $("#evidence").html("");
 	     ev.preventDefault();
