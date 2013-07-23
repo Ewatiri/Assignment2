@@ -1,28 +1,42 @@
 <html>
   <style type = "text/css">
+    *{
+	 font-size: 15px;
+	 font-family: COMIC SANS MS;
+	}
 	#used{
-	 width: 400px;
+	 width: 300px;
 	 margin-left:0px;
 	 font-size: 12px;
 	 padding-bottom: 2px;
+	 position: absolute;
 	}
 	#evidence{
 	 width: 300px;
-	 margin-left: 450px;
-	 margin-top: -600px;
+	 margin-left: 300px;
+	 margin-top: 0%;
+	 position: absolute;
 	}
 	#unused{
-	 width: 300px;
+	 width: 400px;
 	 margin-left: 850px;
-	 margin-top:-250px;
-	 font-size: 12px;
-	 padding-bottom: 2px;
+	 margin-top:0%;
+	 position: absolute;
 	 }
-	 a{
-	 style:none;
+	 #unused>a,#used>a{
+	 padding:2px;
+	 }
+	 #perc{
+	 width: 200px;
+	 margin-left:650px;
+	 font-weight: bold;
+	 position: absolute;
+	 margin-top: 0%;
 	 }
   </style>
+ <script type = "text/javascript" src="js/jquery.js"></script>
   <script type = "text/javascript">
+  
     all = [];
 	names = {};
 	rem = []; 
@@ -30,34 +44,42 @@
 	globe ={};
     $(document).ready(function(){
 	 $("#indicators").click(function(){
+	    $("#used").html("");
+	    $("#unused").html("");
+		$("#evidence").html("");
+		$("#perc").html("");
 	   $("#indicators").attr("disabled","true");
+	   $("#delems").attr("disabled","true");
 	      elem = "indicators";
 	      fetch1();
 	 
 	 });
-	});
-	
-	$(document).ready(function(){
 	 $("#delems").click(function(){
+	   $("#evidence").html("");
+	   $("#used").html("");
+	   $("#perc").html("");
+	 $("#unused").html("");
 	   $("#delems").attr("disabled","true");
+	   $("#indicators").attr("disabled","true");
 	      elem = "dataElements";
 	      fetch1();
 	 
 	 });
 	});
 	
+		
 	function fetch1(){
 	 all =[];
 	 names = [];
 	 globe ={};
 	 var pages;
 	 var i ;
-	 $.get('../api/'+elem+'.json',function(data){
+	 $.get('../../../api/'+elem+'.json',function(data){
 	    pages = data.pager.pageCount;
 		console.log(pages);
 	    for (i = 1; i <= pages; i++)
 		{
-		 y = $.get('../api/'+elem+'.json?page='+i,function(data2){
+		 y = $.get('../../../api/'+elem+'.json?page='+i,function(data2){
 		     $(data2[elem]).each(function (ind,data3){
 		       all.push(data3.id);
 		       names[data3.id] = data3.name;
@@ -76,11 +98,11 @@
 	 
 	}
 	
-    function fetch(){
+/*    function fetch(){
 	 all =[];
 	 names = [];
 	 globe ={};
-	 $.get('../api/'+elem+'.json',function(data){
+	 $.get('../../../api/'+elem+'.json',function(data){
 	    $(data[elem]).each(function (ind,data2){
 		  all.push(data2.id);
 		  names.push(data2.name);
@@ -89,7 +111,7 @@
 	     getCharts();
 		 });
 	 
-	}
+	}*/
 	function analyze(){
 	  rem = [];
 	     $(all).each( function(ind,dat){
@@ -102,7 +124,7 @@
 	}
 	function getCharts(){
 	console.log(all.length);
-	$.get('../api/charts.json',function(data){
+	$.get('../../../api/charts.json',function(data){
 	   $(data.charts).each(function(ind, d1){
 	     y = $.get(d1.href+'.json',function(d2){
 		   $(d2[elem]).each(function (ind1,d3){
@@ -124,7 +146,7 @@
 	 });
 	}
 	function getMapData(){
-	 $.get('../api/mapViews.json',function(data5){
+	 $.get('../../../api/mapViews.json',function(data5){
 	   $(data5.mapViews).each(function (i1,d6){
 	      e = $.get(d6.href+'.json',function(d7){
 		    $(d7[elem]).each(function (ind,d8){
@@ -145,7 +167,7 @@
 	}
 	
 	function getRepData(){
-	 $.get('../api/reportTables.json',function(data){
+	 $.get('../../../api/reportTables.json',function(data){
 	   $(data.reportTables).each(function(i,d1){
 		e1 =  $.get(d1.href+'.json',function(d2){
 		    $(d2[elem]).each(function (i,d3){
@@ -165,19 +187,24 @@
 	 });
 	}
 	function display(){
+	  $("#delems").removeAttr("disabled");
+	  $("#indicators").removeAttr("disabled");
 	  var len1 = rem.length;
 	  var len2 = names.length;
+	  $("#unused").append("<b>Unused</b></br>");
 	 for (var i =0; i< len1; i++)
 	 {
 	    //var d = ("<a></a>").attr("href","#").append(names[rem[i]]);
 	   $("#unused").append(names[rem[i]]).append("<br/>");
 	   console.log(rem[i]);
 	 }
+	 $("#used").append("<b>Used</b><br/>");
+	 $("#perc").append("<b>Usage</b><br/>");
+	 $("#evidence").append("<b>Maps/Charts/Reports</b><br/><br>");
 	 for (key in globe){
 	   var k = $("<a></a>").attr("href",globe[key]).append(names[key]);
 	   $("#used").append(k).append("<br/>");
-	    console.log(key);
-	   k.bind("click",function(ev){
+	    k.bind("click",function(ev){
 	    $("#evidence").html("");
 	     ev.preventDefault();
 		 var st = $(this).attr("href");
@@ -191,7 +218,7 @@
 		else
 		{
 		  rframe = document.createElement("IFRAME");
-		  rframe.style.width = 200 +"px";
+		  rframe.style.width = 300 +"px";
 		  rframe.style.height = 200 +"px";
 		 rframe.setAttribute("src",st);
 		 $("#evidence").append(rframe);
@@ -200,6 +227,12 @@
 		 
 	   });
 	 }
+	 var notused = (rem.length/all.length);
+	 console.log(rem.length);
+	 console.log(all.length);
+	 var used = (1-notused)*100;
+	 notused *= 100;
+	 $("#perc").append("Used: ").append(used.toFixed(3)+'%').append("<br/>").append("Not used: ").append(notused.toFixed(3)+'%').append("</br>");
 	}
   </script>
   <div>
@@ -210,6 +243,8 @@
 	<div id = "evidence">
 	</div>
 	<div id = "unused">
+	</div>
+	<div id = "perc">
 	</div>
   </div>
 </html>
